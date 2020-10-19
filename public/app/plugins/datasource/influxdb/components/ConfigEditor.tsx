@@ -172,6 +172,26 @@ export class ConfigEditor extends PureComponent<Props> {
             </div>
           </div>
         </div>
+
+        <div className="gf-form-inline">
+          <div className="gf-form">
+            <InlineFormLabel
+              className="width-10"
+                tooltip="Maximum number of series accepted from a Flux query."
+            >
+              Series limit
+            </InlineFormLabel>
+            <div className="width-10">
+              <Input
+                className="width-10"
+                placeholder="50"
+                value={options.jsonData.seriesLimit || ''}
+                onChange={onUpdateDatasourceJsonDataOption(this.props, 'seriesLimit')}
+              />
+            </div>
+          </div>
+        </div>
+
       </div>
     );
   }
