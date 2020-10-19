@@ -179,14 +179,14 @@ export class ConfigEditor extends PureComponent<Props> {
               className="width-10"
                 tooltip="Maximum number of series accepted from a Flux query."
             >
-              Series limit
+              Max series
             </InlineFormLabel>
             <div className="width-10">
               <Input
                 className="width-10"
                 placeholder="50"
-                value={options.jsonData.seriesLimit || ''}
-                onChange={onUpdateDatasourceJsonDataOption(this.props, 'seriesLimit')}
+                value={options.jsonData.maxSeries || ''}
+                onChange={onUpdateDatasourceJsonDataOption(this.props, 'maxSeries')}
               />
             </div>
           </div>
