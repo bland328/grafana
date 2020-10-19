@@ -26,6 +26,7 @@ func Query(ctx context.Context, dsInfo *models.DataSource, tsdbQuery *tsdb.TsdbQ
 	tRes := &tsdb.Response{
 		Results: make(map[string]*tsdb.QueryResult),
 	}
+	maxSeries := dsInfo.JsonData.Get("maxSeries").MustInt()
 	r, err := runnerFromDataSource(dsInfo)
 	if err != nil {
 		return nil, err
@@ -39,7 +40,7 @@ func Query(ctx context.Context, dsInfo *models.DataSource, tsdbQuery *tsdb.TsdbQ
 			continue
 		}
 
-		res := executeQuery(ctx, *qm, r, 50)
+		res := executeQuery(ctx, *qm, r, maxSeries)
 
 		tRes.Results[query.RefId] = backendDataResponseToTSDBResponse(&res, query.RefId)
 	}
@@ -78,6 +79,11 @@ func runnerFromDataSource(dsInfo *models.DataSource) (*runner, error) {
 	token, found := dsInfo.SecureJsonData.DecryptedValue("token")
 	if !found {
 		return nil, fmt.Errorf("token is missing from datasource configuration and is needed to use Flux")
+	}
+
+	maxSeries := dsInfo.JsonData.Get("maxSeries").MustInt()
+	if maxSeries < 1 {
+		return nil, fmt.Errorf("invalid max series value in datasource configuration")
 	}
 
 	opts := influxdb2.DefaultOptions()
